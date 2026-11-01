@@ -83,7 +83,7 @@ cookkawasaki/dot-claude   ← 元のリポジトリ
 ### 入ったかの確認
 
 1. Claude Code で新しいセッションを始め、`/context` と入力します（そのセッションが読み込んだファイルの一覧が出ます）。Memory files の欄に `~/.claude/CLAUDE.md` が出ていれば、ルールは入っています。出ない場合は、`~/.claude/CLAUDE.md` が本当にあるか確かめてください
-2. 「理解度レビューをして」と頼みます。ブランチ名や計画を聞き返してくれば、試験官スキルも入っています。何も聞かずにレビューを始める場合は、`~/.claude/skills/comprehension-review/SKILL.md` があるか確かめてください
+2. 「理解度レビューをして」と頼みます。計画を聞き返されるか、「レビュー対象」で始まる深さの提案が出れば、試験官スキルも入っています。どちらも無くレビューを始める場合は、`~/.claude/skills/comprehension-review/SKILL.md` があるか確かめてください
 
 ### 更新するとき
 
