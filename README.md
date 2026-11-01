@@ -87,6 +87,10 @@ flowchart TB
 
 [Issues](https://github.com/cookkawasaki/dot-claude/issues) に書いてください。
 
+## ライセンス
+
+[MIT](LICENSE)。著作権表示を残せば、fork・改変・仕事での利用も自由です。
+
 ## 参考
 
 - [Comprehension debt](https://addyosmani.com/blog/comprehension-debt/)（Addy Osmani）：AI が書いたコードを誰も理解していない状態の問題
