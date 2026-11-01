@@ -26,15 +26,23 @@ Claude Code に任せたコードを、**全部読まずに自分で説明でき
 
 ## 入れ方
 
-### クラウド（claude.ai/code）
+Claude Code が**どこで動いているか**で、入れ方が変わります。
 
-1. 環境の選択から**自分の環境（Personal）**を編集し、Setup script に `setup/cloud-setup.sh` の中身を貼る
-2. `REF` を最新コミットの SHA に置き換えて保存する
-3. 次のセッションで `/context` を開き、Memory files に `/root/.claude/CLAUDE.md` が出ていれば完了
+| 使い方 | 動いている場所 | 入れ方 |
+|---|---|---|
+| ターミナルの `claude` コマンド | 自分の PC | A |
+| VS Code・JetBrains の拡張機能 | 自分の PC | A |
+| デスクトップアプリの Code タブで **Local** を選んだとき | 自分の PC | A |
+| デスクトップアプリの Code タブで **Cloud** を選んだとき | Anthropic のサーバー | B |
+| ブラウザの claude.ai/code、スマホアプリの Code タブ | Anthropic のサーバー | B |
 
-その環境を組織に共有しないでください。共有すると全員のセッションに効きます。
+両方使う人は、A と B の両方を行ってください。
 
-### 手元の CLI
+### A. 自分の PC で動かす場合
+
+`~/.claude/` にファイルを置きます（Windows では `%USERPROFILE%\.claude\`）。
+
+Mac・Linux：
 
 ```bash
 git clone https://github.com/cookkawasaki/dot-claude ~/dot-claude
@@ -43,7 +51,19 @@ ln -s ~/dot-claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -s ~/dot-claude/skills/comprehension-review ~/.claude/skills/comprehension-review
 ```
 
+Windows：`CLAUDE.md` を `%USERPROFILE%\.claude\CLAUDE.md` に、`skills\comprehension-review` フォルダを `%USERPROFILE%\.claude\skills\` の下にコピーしてください。
+
 すでに `~/.claude/CLAUDE.md` がある場合は上書きせず、その中に `@~/dot-claude/CLAUDE.md` の1行を足してください。
+
+### B. Anthropic のサーバー（Cloud）で動かす場合
+
+Cloud のセッションは毎回まっさらなサーバーで始まり、自分の PC の `~/.claude/` は読まれません。代わりに、環境のセットアップスクリプトでファイルを書き出します。
+
+1. セッションを始める画面の環境の選択から、**自分の環境（Personal）**を編集し、Setup script に `setup/cloud-setup.sh` の中身を貼る
+2. `REF` を最新コミットの SHA に置き換えて保存する
+3. 次のセッションで `/context` を開き、Memory files に `/root/.claude/CLAUDE.md` が出ていれば完了
+
+その環境を組織に共有しないでください。共有すると全員のセッションに効きます。
 
 ## 使ってみたい人へ
 
@@ -70,9 +90,8 @@ cookkawasaki/dot-claude   ← 元のリポジトリ
 ### 手順
 
 1. このページ右上の **Fork** を押す
-2. 自分の環境の Setup script に `setup/cloud-setup.sh` の中身を貼る
-3. `REPO=cookkawasaki/dot-claude` を `REPO=自分のユーザー名/dot-claude` に書き換える
-4. `REF` に、自分のコピーの最新コミットの SHA を入れる
+2. 上の「入れ方」の A か B を行う。そのとき `cookkawasaki/dot-claude` の部分は、すべて `自分のユーザー名/dot-claude` に読み替える
+3. B の場合は、`REF` に自分のコピーの最新コミットの SHA を入れる
 
 ### 注意
 
