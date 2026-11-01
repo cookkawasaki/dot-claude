@@ -62,6 +62,15 @@ flowchart TB
 
 このリポジトリを **fork**（自分のアカウントにコピー）してから、Claude Code が動いている場所（自分の PC か Cloud か）に合わせて [docs/install.md](docs/install.md) の手順を行ってください。入ったかの確認と、更新のしかたも書いてあります。
 
+## 更新するとき
+
+| あなたは | 自分の PC（Local・VS Code・ターミナル） | Cloud |
+|---|---|---|
+| fork した人 | 自分のコピーのページで Sync fork → `cd ~/dot-claude && git pull` | Sync fork → Setup script の `REF` を新しい SHA に書き換える |
+| 元のリポジトリの持ち主 | `cd ~/dot-claude && git pull` | `REF` を新しい SHA に書き換える |
+
+Windows で、ファイルをコピーして入れた人は、`git pull` の後にコピーをやり直してください。詳しくは [docs/install.md](docs/install.md)。
+
 ## 中身
 
 | ファイル | 役割 |
