@@ -2,7 +2,7 @@
 
 [README に戻る](../README.md)
 
-必要なもの：Claude Code、GitHub アカウント、git
+必要なもの：Claude Code、GitHub アカウント、git（A の場合）
 
 1. [fork する](#1-fork-する)
 2. [どこで動いているかを確かめる](#2-どこで動いているかを確かめる)
@@ -81,12 +81,13 @@ cookkawasaki/dot-claude   ← 元のリポジトリ
 
 ### 入ったかの確認
 
-Claude Code で新しいセッションを始め、`/context` と入力します（そのセッションが読み込んだファイルの一覧が出ます）。Memory files の欄に `~/.claude/CLAUDE.md` が出ていれば完了です。出ない場合は、`~/.claude/CLAUDE.md` が本当にあるか確かめてください。
+1. Claude Code で新しいセッションを始め、`/context` と入力します（そのセッションが読み込んだファイルの一覧が出ます）。Memory files の欄に `~/.claude/CLAUDE.md` が出ていれば、ルールは入っています。出ない場合は、`~/.claude/CLAUDE.md` が本当にあるか確かめてください
+2. 「理解度レビューをして」と頼みます。ブランチ名や計画を聞き返してくれば、試験官スキルも入っています。何も聞かずにレビューを始める場合は、`~/.claude/skills/comprehension-review/SKILL.md` があるか確かめてください
 
 ### 更新するとき
 
 - Mac・Linux：自分のコピーのページで Sync fork を押した後、`cd ~/dot-claude && git pull`
-- Windows：`git pull` した後、手順2・3のコピーをやり直す
+- Windows：自分のコピーのページで Sync fork を押し、`git pull` した後、手順2・3のコピーをやり直す
 
 ## B. Cloud で動かす場合
 
@@ -103,6 +104,8 @@ Cloud のセッションは毎回まっさらなサーバーで始まり、自�
 出ていない場合は、`REF` か `REPO` の打ち間違いを疑ってください。
 
 その環境を組織に共有しないでください。共有すると全員のセッションに効きます。
+
+環境の画面の場所や設定項目は、公式ドキュメント [Configure cloud environments](https://code.claude.com/docs/en/cloud-environments) に載っています。
 
 ### 更新するとき
 
