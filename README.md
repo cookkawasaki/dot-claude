@@ -69,7 +69,7 @@ flowchart TB
 | fork した人 | 自分のコピーのページで Sync fork → `cd ~/dot-claude && git pull` | Sync fork → Setup script の `REF` を新しい SHA に書き換える |
 | 元のリポジトリの持ち主 | `cd ~/dot-claude && git pull` | `REF` を新しい SHA に書き換える |
 
-Windows で、ファイルをコピーして入れた人は、`git pull` の後にコピーをやり直してください。詳しくは [docs/install.md](docs/install.md)。
+Windows で、ファイルをコピーして入れた人は、`git pull` の後にコピーをやり直してください。詳しくは [docs/install.md](docs/install.md)。何が変わったかは [CHANGES.md](CHANGES.md) にあります。
 
 ## 中身
 
@@ -78,6 +78,7 @@ Windows で、ファイルをコピーして入れた人は、`git pull` の後�
 | [`CLAUDE.md`](CLAUDE.md) | コードを書かせる側のルール。内容は上の「入れると何が変わるか」のとおり |
 | [`skills/comprehension-review/SKILL.md`](skills/comprehension-review/SKILL.md) | 試験官スキルの手順書。試験官が何をどの順でするかの詳細 |
 | [`setup/cloud-setup.sh`](setup/cloud-setup.sh) | Cloud で使う人向けのセットアップスクリプト |
+| [`CHANGES.md`](CHANGES.md) | 変更の記録。更新するか判断するときに読む |
 | [`docs/install.md`](docs/install.md) | 入れ方の詳しい手順（fork・A・B・確認・更新） |
 
 ## 注意
