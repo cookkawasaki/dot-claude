@@ -1,22 +1,52 @@
 # dot-claude
 
-Claude Code に任せたコードを、**全部読まずに自分で説明できる**ようにするための個人設定です。
-`CLAUDE.md` と `skills/` は、`~/.claude/` に置くファイルそのままです。
+Claude Code に任せたコードを、**全部読まずに自分で説明できる**ようになるための設定です。
+コードを書いた AI とは別のセッションの AI が「試験官」になり、あなたの理解を採点します。
 
-## 考え方
+作成・管理：[cookkawasaki](https://github.com/cookkawasaki)
 
-- コードを書かせる前に計画を出させ、理解の土台を作る
-- 書かせた後は、AIの説明を読むのではなく、**自分が説明して、別のセッションのAIに採点させる**。書いたAI自身は、自分の見落としを採点でも見落とすため
+> **はじめて入れる人は → [docs/install.md](docs/install.md)**（fork から完了の確認まで）
 
-## 中身
+## 使い方
 
-| ファイル | 役割 |
-|---|---|
-| `CLAUDE.md` | コードを書かせる側のルール。計画を先に出す、設計判断の前で質問する、完了時に「変更の地図」（変更の要約）を出す |
-| `skills/comprehension-review/SKILL.md` | 試験官スキル。読む箇所の選定 → 説明の採点 → 予測クイズ → 壊して確かめる |
-| `setup/cloud-setup.sh` | Cloud で使う人向けのセットアップスクリプト |
+```mermaid
+flowchart TB
+    subgraph A["① 作業セッション"]
+        direction LR
+        A1["計画 → 承認"] --> A2["実装"] --> A3["変更の地図"]
+    end
+    subgraph B["② 試験官セッション"]
+        direction LR
+        B1["読む箇所を選ぶ"] --> B2["あなたの説明を採点<br>正解は言わない"] --> B3["予測クイズ<br>→ テストにする"] --> B4["壊して確かめる"]
+    end
+    A2 -- "差分と計画だけ渡す" --> B1
+    B4 --> C["最後に変更の地図と突き合わせ"]
+    A3 -. "最後に自分だけが見る" .-> C
+```
 
-分からない言葉は、最後の「[用語](#用語)」を見てください。
+1. **作業セッション**で計画を承認し、実装させる。最後に出る「変更の地図」は、PR の説明に貼るかメモしておく
+2. **新しいセッション**を、同じリポジトリで開く（別のウィンドウか、閉じてから開き直す）。Cloud の場合は、先に作業ブランチを push しておく
+3. 「理解度レビューをして」と頼む。聞かれたら、変更のあるブランチ名・取り込む先のブランチ（ふつうは main）・計画を伝える
+4. 試験官が選んだ箇所だけ読む → 何も見ずに説明を書く → 採点 → 予測クイズ → 壊して確かめる
+5. 最後に、手順1の「変更の地図」と突き合わせる。試験官が選んだ箇所と食い違う所が、いちばん見落としやすい所です
+6. 残すことにしたテストは、作業セッションに戻してコミットする（試験官はコミットしません）
+
+### 例：説明を採点してもらう
+
+```
+あなた： 5回失敗すると15分ロックする。失敗はユーザーIDごとに数える。ロック中は401を返す。
+
+試験官： ○ 1文目
+         △ 2文目 → rate_limit.mjs の20〜24行目も見てください
+         ✕ 3文目 → login.mjs の3行目で返している値を確かめてください
+         抜け  → ログインに成功したとき、ストアに繋がらないとき
+```
+
+正解は教えず、見るべき行だけを指します。指された行を読んで書き直すと、自分の言葉で説明できるようになります。
+
+### なぜ別のセッションなのか
+
+コードを書いた AI に採点させると、書いたときの見落としを採点でも見落とすからです。試験官には差分と計画だけを渡し、書いた AI の説明は最後まで見せません。
 
 ## 入れると何が変わるか
 
@@ -25,121 +55,28 @@ Claude Code に任せたコードを、**全部読まずに自分で説明でき
 - 設計判断（エラー処理・データ構造など）の手前で、選択肢と理由を示して質問してきます
 - 作業の最後に「変更の地図」を出します
 
-## 1つの変更での流れ
-
-1. 作業セッションで計画を承認し、実装させる。最後に出る「変更の地図」は、PR の説明に貼るかメモしておく
-2. **新しいセッション**を、同じリポジトリで開く（作業セッションとは別のウィンドウか、閉じてから開き直す）。Cloud の場合は、先に作業ブランチを push しておく
-3. 「理解度レビューをして」と頼み、聞かれたら、変更のあるブランチ名・取り込む先のブランチ（ふつうは main）・計画を伝える。「説明を採点して」「予測クイズを出して」でも始まります
-4. 試験官が選んだ箇所だけ読む → 何も見ずに説明を書く → 採点 → 予測クイズ → 壊して確かめる
-5. 最後に、手順1の「変更の地図」と突き合わせる
-6. 試験官とのやり取りで残すことにしたテストは、作業セッションに戻してコミットする（試験官はコミットしません）
-
-## はじめに：fork する
-
-このリポジトリを直接読み込まず、**fork して自分のリポジトリから**読み込んでください。
-
-### fork とは
-
-他人の GitHub リポジトリを、自分のアカウントの下にまるごとコピーすることです。
-
-```
-cookkawasaki/dot-claude   ← 元のリポジトリ
-        │ fork（コピー）
-        ▼
-あなた/dot-claude          ← あなた専用のコピー
-```
-
-- コピーした後は元のリポジトリとは別物になり、自由に書き換えられます
-- 元のリポジトリが更新されても、あなたのコピーには自動では入りません。取り込みたいときだけ、自分のコピーのページで **Sync fork** を押します
-
-### なぜ fork するのか
-
-ここにあるファイルは、セッションのたびに**AIへの指示として読み込まれます**。他人のリポジトリを直接読み込むと、その人が書き換えた内容が、あなたの確認なしにあなたのAIへの指示になります。fork しておけば、いつどの更新を取り込むかを自分で決められます。
-
-### やり方
-
-このページ右上の **Fork** を押します。以下の手順に出てくる `<あなたのユーザー名>` は、あなたの GitHub のユーザー名に置き換えてください。
-
 ## 入れ方
 
-Claude Code が**どこで動いているか**で、入れ方が変わります。
+必要なもの：Claude Code、GitHub アカウント、git
+
+1. このリポジトリを **fork** する（自分のアカウントにコピーする）。直接読み込むと、他人の更新があなたの AI への指示になってしまうため
+2. Claude Code が動いている場所に合わせて、A か B の手順を行う
 
 | 使い方 | 動いている場所 | 入れ方 |
 |---|---|---|
-| ターミナルの `claude` コマンド | 自分の PC | A |
-| VS Code・JetBrains の拡張機能 | 自分の PC | A |
-| デスクトップアプリの Code タブで **Local** を選んだとき | 自分の PC | A |
-| デスクトップアプリの Code タブで **Cloud** を選んだとき | Anthropic のサーバー | B |
-| ブラウザの claude.ai/code、スマホアプリの Code タブ | Anthropic のサーバー | B |
+| ターミナル・VS Code・JetBrains、デスクトップアプリの **Local** | 自分の PC | A |
+| デスクトップアプリの **Cloud**、ブラウザの claude.ai/code、スマホアプリ | Anthropic のサーバー | B |
 
-両方使う人は、A と B の両方を行ってください。会社の組織アカウントでは Cloud が使えないことがあります。Cloud を使わない人は A だけで足ります。
+手順の詳細と、入ったかの確認・更新のしかたは [docs/install.md](docs/install.md) にあります。
 
-### A. 自分の PC で動かす場合
+## 中身
 
-#### Mac・Linux
-
-1. まず、既に個人用の `CLAUDE.md` があるか確認します。
-
-   ```bash
-   ls ~/.claude/CLAUDE.md
-   ```
-
-2. ファイルを取ってきて、スキルを置きます。
-
-   ```bash
-   git clone https://github.com/<あなたのユーザー名>/dot-claude ~/dot-claude
-   mkdir -p ~/.claude/skills
-   ln -s ~/dot-claude/skills/comprehension-review ~/.claude/skills/comprehension-review
-   ```
-
-3. `CLAUDE.md` を置きます。手順1の結果で分かれます。
-   - 「No such file or directory」と出た（まだ無い）場合：
-
-     ```bash
-     ln -s ~/dot-claude/CLAUDE.md ~/.claude/CLAUDE.md
-     ```
-
-   - ファイル名が表示された（既にある）場合：上書きせず、既存の `~/.claude/CLAUDE.md` の末尾に次の1行を書き足します。Claude Code は、この行を「そのファイルも読み込む」という指示として扱います。
-
-     ```
-     @~/dot-claude/CLAUDE.md
-     ```
-
-`ln -s` はファイルのショートカットを作るコマンドです。元の `~/dot-claude` を更新すれば、そのまま反映されます。
-
-#### Windows
-
-1. `git clone https://github.com/<あなたのユーザー名>/dot-claude` で、好きな場所に取ってきます
-2. `CLAUDE.md` を `%USERPROFILE%\.claude\CLAUDE.md` にコピーします。既にある場合は上書きせず、中身を末尾に貼り足します
-3. `skills\comprehension-review` フォルダを `%USERPROFILE%\.claude\skills\` の下にコピーします
-
-#### 入ったかの確認
-
-Claude Code で新しいセッションを始め、`/context` と入力します（そのセッションが読み込んだファイルの一覧が出ます）。Memory files の欄に `~/.claude/CLAUDE.md` が出ていれば完了です。出ない場合は、`~/.claude/CLAUDE.md` が本当にあるか確かめてください。
-
-#### 更新するとき
-
-- Mac・Linux：fork 側で Sync fork を押した後、`cd ~/dot-claude && git pull`
-- Windows：`git pull` した後、手順2・3のコピーをやり直す
-
-### B. Anthropic のサーバー（Cloud）で動かす場合
-
-Cloud のセッションは毎回まっさらなサーバーで始まり、自分の PC の `~/.claude/` は読まれません。代わりに、環境のセットアップスクリプト（環境を作るときに最初に実行されるスクリプト）でファイルを書き出します。
-
-1. セッションを始める画面の環境の選択から、**自分の環境（Personal）**を編集し、Setup script に `setup/cloud-setup.sh` の中身を貼る
-2. `REPO=` の行を `REPO=<あなたのユーザー名>/dot-claude` に書き換える
-3. `REF=` の行に、自分のコピーの最新コミットの SHA を入れて保存する
-   - 取り方：GitHub で自分のコピーを開き、ファイル一覧の右上にある「〇 Commits」を押す → 一番上のコミットの右にあるコピーボタンを押す（40文字の英数字。短い7文字版ではなく全部を貼る）
-   - 手元に clone があれば `git rev-parse HEAD` でも取れます
-4. 新しいセッションで `/context` と入力し、Memory files に `/root/.claude/CLAUDE.md` が出ていれば完了（Cloud では `~` が `/root` を指します）
-
-出ていない場合は、`REF` か `REPO` の打ち間違いを疑ってください。
-
-その環境を組織に共有しないでください。共有すると全員のセッションに効きます。
-
-#### 更新するとき
-
-Sync fork を押した後、`REF` を新しいコミットの SHA に書き換えて保存します。スクリプトが変わると環境が作り直され、新しい中身が入ります。
+| ファイル | 役割 |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | コードを書かせる側のルール。計画を先に出す、設計判断の前で質問する、完了時に「変更の地図」を出す |
+| [`skills/comprehension-review/SKILL.md`](skills/comprehension-review/SKILL.md) | 試験官スキルの手順書。試験官が何をどの順でするかの詳細 |
+| [`setup/cloud-setup.sh`](setup/cloud-setup.sh) | Cloud で使う人向けのセットアップスクリプト |
+| [`docs/install.md`](docs/install.md) | 入れ方の詳しい手順（fork・A・B・確認・更新） |
 
 ## 注意
 
@@ -151,17 +88,18 @@ Sync fork を押した後、`REF` を新しいコミットの SHA に書き換�
 | 用語 | 意味 |
 |---|---|
 | CLAUDE.md | Claude Code がセッションの最初に毎回読む指示書。`~/.claude/` に置くと、すべてのプロジェクトに効く |
-| スキル（SKILL.md） | 特定の頼みごとをしたときだけ読み込まれる手順書 |
-| 変更の地図 | 作業の最後に Claude Code に出させる、変更の要約（ファイル別の要約・処理の流れ・判断の理由・確認していないこと・読むべき箇所） |
+| スキル | 特定の頼みごとをしたときだけ読み込まれる手順書 |
+| 変更の地図 | 作業の最後に出させる変更の要約。ファイル別の要約・処理の流れ・判断の理由・確認していないこと・読むべき箇所 |
 | アサーション | テストの中で「こうなるはず」を確かめる行（`assert` や `expect` など） |
-| 予測クイズ | コードを動かす前に結果を予想し、テストで答え合わせをすること |
-| 壊して確かめる | わざと1か所だけコードを変え、テストがそれに気づくかを見ること（ミューテーションテストと呼ばれる方法） |
-| コミットの SHA | コミット1つ1つに付く40文字の ID。ブランチ名と違い、指す中身が後から変わらない |
-| fork / Sync fork | 上の「fork とは」を参照 |
+| 予測クイズ | コードを動かす前に結果を予想し、その予想をテストの期待値にして答え合わせをすること |
+| 壊して確かめる | わざと1か所だけコードを変え、テストがそれに気づくかを見ること |
+
+## 質問・改善案
+
+[Issues](https://github.com/cookkawasaki/dot-claude/issues) に書いてください。
 
 ## 参考
 
-- [Comprehension debt](https://addyosmani.com/blog/comprehension-debt/)（Addy Osmani）
-- [Not all AI-assisted programming is vibe coding](https://simonwillison.net/2025/Mar/19/vibe-coding/)（Simon Willison）
-- [How AI assistance impacts the formation of coding skills](https://www.anthropic.com/research/AI-assistance-coding-skills)（Anthropic）
-- [Configure cloud environments](https://code.claude.com/docs/en/cloud-environments)（Claude Code 公式ドキュメント）
+- [Comprehension debt](https://addyosmani.com/blog/comprehension-debt/)（Addy Osmani）：AI が書いたコードを誰も理解していない状態の問題
+- [Not all AI-assisted programming is vibe coding](https://simonwillison.net/2025/Mar/19/vibe-coding/)（Simon Willison）：説明できないコードはコミットしない、という基準
+- [How AI assistance impacts the formation of coding skills](https://www.anthropic.com/research/AI-assistance-coding-skills)（Anthropic）：AI に質問しながら使うと理解が保たれる、という研究
