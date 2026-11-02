@@ -108,3 +108,16 @@ Cloud のセッションは毎回まっさらなサーバーで始まり、自�
 ### 更新するとき
 
 Sync fork を押した後、`REF` を新しいコミットの SHA に書き換えて保存します。スクリプトが変わると環境が作り直され、新しい中身が入ります。
+
+## 外すとき
+
+- 自分の PC（Mac・Linux）：次の2つのリンクを消します。リンクを消すだけなので、`~/dot-claude` の中身は消えません。
+
+  ```bash
+  rm ~/.claude/skills/comprehension-review
+  rm ~/.claude/CLAUDE.md
+  ```
+
+  既にあった `CLAUDE.md` に `@~/dot-claude/CLAUDE.md` の1行を足した人は、`rm ~/.claude/CLAUDE.md` はせず、その1行だけを消してください。
+- Windows：コピーした `skills\comprehension-review` フォルダと、`CLAUDE.md` に貼り足した部分を消します。
+- Cloud：自分の環境の Setup script から、貼った中身を消します。
