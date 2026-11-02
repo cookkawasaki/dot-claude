@@ -6,6 +6,7 @@ Claude Code に任せたコードを、**全部読まずに自分で説明でき
 作成・管理：[cookkawasaki](https://github.com/cookkawasaki)
 
 はじめて入れる人は、[docs/install.md](docs/install.md) を読んでください。
+入れている人の更新は「[更新するとき](#更新するとき)」へ。何が変わったかは [CHANGES.md](CHANGES.md) にあります。
 
 ## 使い方
 
@@ -65,6 +66,8 @@ low で足りているかは、1回目の実走で確かめられます。説明
 このリポジトリを **fork**（自分のアカウントにコピー）してから、Claude Code が動いている場所（自分の PC か Cloud か）に合わせて [docs/install.md](docs/install.md) の手順を行ってください。入ったかの確認と、更新のしかたも書いてあります。
 
 ## 更新するとき
+
+更新したときは、作成者がチャットなどで CHANGES.md のリンクを添えて知らせます。気になるときは、[CHANGES.md](CHANGES.md) の一番上の日付を見てください。
 
 | あなたは | 自分の PC（Local・VS Code・ターミナル） | Cloud |
 |---|---|---|
